@@ -1,0 +1,10 @@
+- console.log(arg1, arg2, arg3 .....)の形で使うと引数同士の間にスペースが一個入る
+- var は予約語
+- {} <- 中身のないobject ?
+- 42 is an object
+	- array
+- [object Object] is an object
+	- empty object
+- ↑ 一度文字列に変換すること
+	- 文字列リテラルと+演算子で結合するなど
+- 冠詞 a, an に注意
