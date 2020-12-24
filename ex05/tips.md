@@ -8,6 +8,7 @@
 	- "event"が発生したときに実行する関数を登録
 - data Eventは複数回発生する
 	- データひとかたまり(chunk)ごとに発生
+- 課題文的に1chunkごとに改行が必要かも
 
 # refereces
 ## Node.jsの標準モジュール(https)でAPIを叩く(GETのみ) / Qiita

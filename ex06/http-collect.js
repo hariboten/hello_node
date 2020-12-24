@@ -1,6 +1,8 @@
 if (process.argv.length != 3)
 	return ;
 const http = require("http");
+const { BufferList } = require("bl");
+const bl = new BufferList();
 let url = process.argv[2];
 http.get(url, (res) => {
 	const { statusCode } = res;
@@ -8,9 +10,11 @@ http.get(url, (res) => {
 		return ;
 	res.setEncoding("utf8");
 	res.on("data", (chunk) => {
-		console.log(chunk);
+		bl.append(chunk);
 	});
 	res.on("end", () => {
-		return ;
+		const data = bl.toString();
+		console.log(data.length);
+		console.log(data);
 	});
 }).on("error", (e) => {return ;});
