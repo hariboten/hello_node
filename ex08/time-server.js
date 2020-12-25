@@ -26,16 +26,28 @@ function yyyymmddhhmm (d) {
 }
 
 function main () {
+	if (process.argv.length != 3)
+		return ;
+	let port = parseInt(process.argv[2]);
+	if (isNaN(port) || port < 0)
+		return ;
 	const net = require("net");
 	var server;
 	server = net.createServer((c) => {
 		//console.log("lient connected");
 		//c.write("Hello world!\n");
+		c.on("error", () => {
+			return ;
+		});
 		c.write(yyyymmddhhmm(new Date()));
 		c.end();
 	});
-	server.listen(8080, () => {
+	server.on("error", () => {
+		return ;
+	});
+	server.listen(port, () => {
 		//console.log("server bound");
+		return ;
 	});
 }
 
