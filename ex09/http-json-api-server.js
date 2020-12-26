@@ -7,9 +7,6 @@ function get_parsetime_json (query) {
 		return ("invalied query");
 	else
 		date = qtime;
-	console.log(query);
-	console.log(qtime);
-	console.log(date);
 	return ({
 		"hour": date.getUTCHours(),
 		"minute": date.getUTCMinutes(),

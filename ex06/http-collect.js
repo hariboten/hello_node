@@ -3,7 +3,8 @@ if (process.argv.length != 3)
 const http = require("http");
 const { BufferListStream } = require("bl");
 let url = process.argv[2];
-http.get(url, (res) => {
+try {
+	http.get(url, (res) => {
 	res.pipe(BufferListStream((err, data) => {
 		if (err)
 			return ;
@@ -11,4 +12,7 @@ http.get(url, (res) => {
 		console.log(str.length);
 		console.log(str);
 	}));
-}).on("error", (e) => {return ;});
+	}).on("error", (e) => {return ;});
+} catch (e) {
+	return ;
+}
