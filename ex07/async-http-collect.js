@@ -1,36 +1,36 @@
 if (process.argv.length != 5)
 	return ;
 const http = require("http");
-const { BufferList } = require("bl");
+const { BufferListStream } = require("bl");
 
-function sync_get_rq(url)
+var outputs = [];
+var count = 3;
+
+function flush_data()
 {
-	return new Promise((resolve, reject) => {
-		http.get(url, (res) => {
-			const bl = new BufferList();
-			res.setEncoding("utf8");
-			res.on("data", (chunk) => {
-				bl.append(chunk);
-			});
-			res.on("end", () => {
-				const data = bl.toString();
-				resolve(data);
-			});
-		}).on("error", (e) => {
-			resolve("");
-		});
-	});
+	console.log(outputs[0]);
+	console.log(outputs[1]);
+	console.log(outputs[2]);
 }
 
-sync_get_rq(process.argv[2])
-	.then((data) => {
-		console.log(data);
-		return sync_get_rq(process.argv[3]);
-	})
-	.then((data) => {
-		console.log(data);
-		return sync_get_rq(process.argv[4]);
-	})
-	.then((data) => {
-		console.log(data);
-	});
+function my_get(url, index)
+{
+	http.get(url, (res) => {
+		res.pipe(BufferListStream((err, data) => {
+			if (err)
+				return ;
+			outputs[index] = data.toString();
+			count--;
+			if (count == 0)
+				flush_data();
+		}));
+	}).on("error", (e) => {return ;});
+}
+
+try {
+	my_get(process.argv[2], 0);
+	my_get(process.argv[3], 1);
+	my_get(process.argv[4], 2);
+} catch (e) {
+	return ;
+}
