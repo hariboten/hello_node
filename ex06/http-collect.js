@@ -1,20 +1,14 @@
 if (process.argv.length != 3)
 	return ;
 const http = require("http");
-const { BufferList } = require("bl");
-const bl = new BufferList();
+const { BufferListStream } = require("bl");
 let url = process.argv[2];
 http.get(url, (res) => {
-	const { statusCode } = res;
-	if (statusCode !== 200)
-		return ;
-	res.setEncoding("utf8");
-	res.on("data", (chunk) => {
-		bl.append(chunk);
-	});
-	res.on("end", () => {
-		const data = bl.toString();
-		console.log(data.length);
-		console.log(data);
-	});
+	res.pipe(BufferListStream((err, data) => {
+		if (err)
+			return ;
+		const str = data.toString();
+		console.log(str.length);
+		console.log(str);
+	}));
 }).on("error", (e) => {return ;});
