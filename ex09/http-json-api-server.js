@@ -1,12 +1,29 @@
-function get_parsetime_json (date) {
+function get_parsetime_json (query) {
+	var date;
+	if (query.iso[query.iso.length - 1] !== "Z")
+		query.iso += "Z";
+	const qtime = new Date(query.iso)
+	if (isNaN(qtime))
+		return ("invalied query");
+	else
+		date = qtime;
+	console.log(query);
+	console.log(qtime);
+	console.log(date);
 	return ({
-		"hour": date.getHours(),
-		"minute": date.getMinutes(),
-		"second": date.getSeconds()
+		"hour": date.getUTCHours(),
+		"minute": date.getUTCMinutes(),
+		"second": date.getUTCSeconds()
 	});
 }
 
-function get_unixtime_json (date) {
+function get_unixtime_json (query) {
+	var date;
+	const qtime = new Date(query.iso)
+	if (isNaN(qtime))
+		return ("invalied query");
+	else
+		date = qtime;
 	return ({ "unixtime": date.getTime()});
 }
 
@@ -16,14 +33,16 @@ function main () {
 	let port = parseInt(process.argv[2]);
 	if (isNaN(port) || port < 0)
 		return ;
-	http = require("http");
+	const http = require("http");
+	const querystring = require("querystring");
 	const server = http.createServer((req, res) => {
-		if (req.url === "/api/parsetime") {
+		const url = req.url.split("?");
+		if (url[0] === ("/api/parsetime")) {
 			res.writeHead(200);
-			res.write(JSON.stringify(get_parsetime_json(new Date())));
-		} else if (req.url === "/api/unixtime") {
+			res.write(JSON.stringify(get_parsetime_json(querystring.parse(url[1]))));
+		} else if (url[0] === "/api/unixtime") {
 			res.writeHead(200);
-			res.write(JSON.stringify(get_unixtime_json(new Date())));
+			res.write(JSON.stringify(get_unixtime_json(querystring.parse(url[1]))));
 		} else {
 			res.writeHead(404);
 			res.write("404 not found");
