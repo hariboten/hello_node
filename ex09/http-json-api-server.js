@@ -1,5 +1,7 @@
 function get_parsetime_json (query) {
 	var date;
+	if (query.iso === undefined)
+		return ("invalied query");
 	if (query.iso[query.iso.length - 1] !== "Z")
 		query.iso += "Z";
 	const qtime = new Date(query.iso)
@@ -16,6 +18,8 @@ function get_parsetime_json (query) {
 
 function get_unixtime_json (query) {
 	var date;
+	if (query.iso === undefined)
+		return ("invalied query");
 	const qtime = new Date(query.iso)
 	if (isNaN(qtime))
 		return ("invalied query");
